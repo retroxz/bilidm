@@ -10,7 +10,7 @@ class BaseModel:
     # 表名
     TABLE = ''
     # 创建引擎
-    engine = create_engine(DB_CONNECT_STRING, echo=True)
+    engine = create_engine(DB_CONNECT_STRING, echo=False)
     # 自动映射
     Base = automap_base()
     Base.prepare(engine, reflect=True)
