@@ -35,7 +35,7 @@ class MyBLiveClient(blivedm.BLiveClient):
         # 发送弹幕的房间信息
         params['room_id'] = BLive.roomid
         params['runame'] = BLive.runame
-        self.danmaku_table.inset(params)
+        self.danmaku_table.insert(params)
 
     # 礼物回调
     async def _on_receive_gift(self, gift: blivedm.GiftMessage):

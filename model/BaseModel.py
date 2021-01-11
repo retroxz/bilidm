@@ -39,7 +39,7 @@ class BaseModel:
         return ''.join(name_list).lower()
 
     # 插入一条数据
-    def inset(self,params:dict):
+    def insert(self,params:dict):
         table_obj = eval(f'self.Base.classes.{self.TABLE}')()
         for key,value in params.items():
             if hasattr(table_obj,key):
