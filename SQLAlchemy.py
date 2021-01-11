@@ -53,7 +53,7 @@ class User(Base):
 class DB_Instance:
     def __init__(self):
         # 初始化数据库连接:
-        self.engine = create_engine('mysql+mysqlconnector://{}:{}@{}:3306/{}'.format(database.username,
+        self.engine = create_engine('model+mysqlconnector://{}:{}@{}:3306/{}'.format(database.username,
                                                                                      database.password,
                                                                                      database.host,
                                                                                      database.db))
