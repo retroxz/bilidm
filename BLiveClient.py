@@ -1,12 +1,13 @@
 import blivedm
 import logger
-from model.Danmaku import Danmaku
+# from model.Danmaku import Danmaku
+from model.Tables import BiliDanmaku
 from config import BLive
 
-
+bili_danmaku = BiliDanmaku()
 
 class MyBLiveClient(blivedm.BLiveClient):
-    danmaku_table = Danmaku()
+    # danmaku_table = Danmaku()
     # 演示如何自定义handler
     # _COMMAND_HANDLERS = blivedm.BLiveClient._COMMAND_HANDLERS.copy()
 
@@ -35,7 +36,27 @@ class MyBLiveClient(blivedm.BLiveClient):
         # 发送弹幕的房间信息
         params['room_id'] = BLive.roomid
         params['runame'] = BLive.runame
-        self.danmaku_table.insert(params)
+        # self.danmaku_table.insert(params)
+        bili_danmaku.create(admin=params['admin'],
+                            medal_color=params['medal_color'],
+                            medal_level=params['medal_level'],
+                            medal_name=params['medal_name'],
+                            medal_room_id=params['medal_room_id'],
+                            medal_runame=params['medal_runame'],
+                            mobile_verify=params['mobile_verify'],
+                            msg = params['msg'],
+                            msg_type = params['msg_type'],
+                            privilege_type = params['privilege_type'],
+                            room_id = params['room_id'],
+                            runame = params['runame'],
+                            svip = params['svip'],
+                            timestamp = params['timestamp'],
+                            uid = params['uid'],
+                            uname = params['uname'],
+                            urank = params['urank'],
+                            user_level = params['user_level'],
+                            vip = params['vip'])
+
 
     # 礼物回调
     async def _on_receive_gift(self, gift: blivedm.GiftMessage):
