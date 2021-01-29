@@ -75,6 +75,7 @@ class BiliGuard(BaseModel):
     runame = CharField(null=True)
     start_time = DateTimeField(null=True)
     uid = IntegerField(null=True)
+    uname = CharField(null=True)
 
     class Meta:
         table_name = 'bili_guard'

@@ -96,6 +96,7 @@ class MyBLiveClient(blivedm.BLiveClient):
         params['runame'] = BLive.runame
 
         bili_guard.create(uid = params['uid'],
+        uname = params['username'],
         guard_level = params['guard_level'],
         num = params['num'],
         price = params['price'],
