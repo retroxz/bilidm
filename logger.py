@@ -62,3 +62,15 @@ def write_json_str(d):
     f.write(json.dumps(d, ensure_ascii=False))
     f.write('\n')
     f.close()
+
+    def write_json_unknown(d):
+        # 目录
+        json_path = f"{os.getcwd()}{os.sep}unknown{os.sep}{time.strftime('%Y%m', time.localtime(time.time()))}{os.sep}"
+        # 文件名
+        json_file_name = f"{time.strftime('%d', time.localtime(time.time()))}.txt"
+        if not os.path.exists(json_path):
+            os.makedirs(json_path)
+        f = open(f"{json_path}{json_file_name}", 'a', encoding='utf-8')
+        f.write(d)
+        f.write('\n')
+        f.close()

@@ -27,6 +27,13 @@ def database(cls):
     return cls
 
 
+def api(cls):
+    Dict = yml_read['api']
+    for name, value in Dict.items():
+        setattr(cls, name, value)
+    return cls
+
+
 @Blive
 class BLive(object):
     pass
@@ -34,4 +41,9 @@ class BLive(object):
 
 @database
 class database(object):
+    pass
+
+
+@api
+class api(object):
     pass

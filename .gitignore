@@ -3,6 +3,7 @@
 config.yml
 json
 log
+unknown
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

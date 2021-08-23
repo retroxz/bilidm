@@ -5,19 +5,65 @@ from model.Tables import BiliDanmaku
 from model.Tables import BiliGift
 from model.Tables import BiliGuard
 from model.Tables import BiliSc
+from config import api
 from config import BLive
+import httpx
+
 
 bili_danmaku = BiliDanmaku()
 bili_gift = BiliGift()
 bili_guard = BiliGuard()
 bili_sc = BiliSc()
 
-
 # 时间戳转字符串
 def timestamp_to_str(timestamp):
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
 
+
 class MyBLiveClient(blivedm.BLiveClient):
+    # 演示如何自定义handler
+
+    _COMMAND_HANDLERS = blivedm.BLiveClient._COMMAND_HANDLERS.copy()
+
+    async def __on_vip_enter(self, command):
+        print(command)
+
+    async def __on_room_change(self, command):
+        group_list = api.group
+        for group in group_list:
+            r = httpx.request('POST', api.url, json={
+                'key': api.group,
+                'message': F"{BLive.runame}改标题啦：{command['data']['title']}",
+                'qid': group,
+                'message_type': 'group'
+            })
+
+    async def __on_room_real_time_message_update(self, command):
+        print(F"[ROOM_REAL_TIME_MESSAGE_UPDATE]{command}")
+
+    async def __on_live_preparing(self, command):
+        print(F"[PREPARING]{command}")
+
+    async def __on_live(self, command):
+        print(F"[Live]{command}")
+
+    async def __on_welcome_guard(self,command):
+        print(F"[舰长入场]{command}")
+
+    _COMMAND_HANDLERS['WELCOME'] = __on_vip_enter  # 老爷入场
+
+    _COMMAND_HANDLERS['ROOM_CHANGE'] = __on_room_change  # 可能是标题改
+
+    _COMMAND_HANDLERS['ROOM_REAL_TIME_MESSAGE_UPDATE'] = __on_room_real_time_message_update  # 可能是直播间状态
+
+    _COMMAND_HANDLERS['PREPARING'] = __on_live_preparing  # 可能是直播间状态
+
+    _COMMAND_HANDLERS['Live'] = __on_live  # 可能是直播间状态
+
+    _COMMAND_HANDLERS['WELCOME_GUARD'] = __on_welcome_guard  # 可能是直播间状态
+
+    async def _on_receive_popularity(self, popularity: int):
+        print(f'当前人气值：{popularity}')
 
     # 弹幕回调
     async def _on_receive_danmaku(self, danmaku: blivedm.DanmakuMessage):
@@ -95,17 +141,17 @@ class MyBLiveClient(blivedm.BLiveClient):
         params['room_id'] = BLive.roomid
         params['runame'] = BLive.runame
 
-        bili_guard.create(uid = params['uid'],
-        uname = params['username'],
-        guard_level = params['guard_level'],
-        num = params['num'],
-        price = params['price'],
-        gift_id = params['gift_id'],
-        gift_name = params['gift_name'],
-        start_time = timestamp_to_str(params['start_time']),
-        end_time = timestamp_to_str(params['end_time']),
-        room_id = params['room_id'],
-        runame = params['runame'])
+        bili_guard.create(uid=params['uid'],
+                          uname=params['username'],
+                          guard_level=params['guard_level'],
+                          num=params['num'],
+                          price=params['price'],
+                          gift_id=params['gift_id'],
+                          gift_name=params['gift_name'],
+                          start_time=timestamp_to_str(params['start_time']),
+                          end_time=timestamp_to_str(params['end_time']),
+                          room_id=params['room_id'],
+                          runame=params['runame'])
 
     # SC回调
     async def _on_super_chat(self, message: blivedm.SuperChatMessage):
@@ -118,27 +164,24 @@ class MyBLiveClient(blivedm.BLiveClient):
         params['room_id'] = BLive.roomid
         params['runame'] = BLive.runame
 
-
-        bili_sc.create(price = params['price'],
-        message = params['message'],
-        message_jpn = params['message_jpn'],
-        time = params['time'],
-        start_time = timestamp_to_str(params['start_time']),
-        end_time = timestamp_to_str(params['end_time']),
-        message_id = params['id'],
-        gift_id = params['gift_id'],
-        gift_name = params['gift_name'],
-        uid = params['uid'],
-        uname = params['uname'],
-        face = params['face'],
-        guard_level = params['guard_level'],
-        user_level = params['user_level'],
-        room_id = params['room_id'],
-        runame = params['runame'],
-        background_bottom_color = params['background_bottom_color'],
-        background_color = params['background_color'],
-        background_icon = params['background_icon'],
-        background_image = params['background_image'],
-        background_price_color = params['background_price_color'])
-
-
+        bili_sc.create(price=params['price'],
+                       message=params['message'],
+                       message_jpn=params['message_jpn'],
+                       time=params['time'],
+                       start_time=timestamp_to_str(params['start_time']),
+                       end_time=timestamp_to_str(params['end_time']),
+                       message_id=params['id'],
+                       gift_id=params['gift_id'],
+                       gift_name=params['gift_name'],
+                       uid=params['uid'],
+                       uname=params['uname'],
+                       face=params['face'],
+                       guard_level=params['guard_level'],
+                       user_level=params['user_level'],
+                       room_id=params['room_id'],
+                       runame=params['runame'],
+                       background_bottom_color=params['background_bottom_color'],
+                       background_color=params['background_color'],
+                       background_icon=params['background_icon'],
+                       background_image=params['background_image'],
+                       background_price_color=params['background_price_color'])
