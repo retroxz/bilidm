@@ -32,8 +32,8 @@ class MyBLiveClient(blivedm.BLiveClient):
         group_list = api.group
         for group in group_list:
             r = httpx.request('POST', api.url, json={
-                'key': api.group,
-                'message': F"{BLive.runame}改标题啦：{command['data']['title']}",
+                'key': api.key,
+                'message': F"{BLive.runame}的直播间改标题啦：{command['data']['title']}",
                 'qid': group,
                 'message_type': 'group'
             })
