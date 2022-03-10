@@ -5,15 +5,18 @@ from model.Tables import BiliDanmaku
 from model.Tables import BiliGift
 from model.Tables import BiliGuard
 from model.Tables import BiliSc
+from model.Tables import BiliEnter
 from config import api
 from config import BLive
 import httpx
+import json
 
 
 bili_danmaku = BiliDanmaku()
 bili_gift = BiliGift()
 bili_guard = BiliGuard()
 bili_sc = BiliSc()
+bili_enter = BiliEnter()
 
 
 # 时间戳转字符串
@@ -52,7 +55,16 @@ class MyBLiveClient(blivedm.BLiveClient):
         print(F"[舰长入场]{command}")
 
     async def __on_enter_room(self, command):
-        print(command)
+        command = command['data']
+        # 写入日志
+        logger.get_logger().debug(
+            f"[入场] {command['uname']}({command['fans_medal']['medal_name']}[{command['fans_medal']['medal_level']}])")
+        # 写入json
+        logger.write_json_str(json.dumps(command))
+        # 写入数据表
+        bili_enter.create(uid=command['uid'], uname=command['uname'], guard_level=command['fans_medal']['guard_level'],
+                          is_lighted=command['fans_medal']['is_lighted'], medal_level=command['fans_medal']['medal_level'],
+                          medal_name=command['fans_medal']['medal_name'], room_id=command['roomid'], timestamp=command['timestamp'])
 
     _COMMAND_HANDLERS['WELCOME'] = __on_vip_enter  # 老爷入场
 
