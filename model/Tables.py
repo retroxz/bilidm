@@ -1,4 +1,4 @@
-#coding=utf-8  
+# coding=utf-8
 
 """
 @File: Tables.py
@@ -10,12 +10,12 @@
 from peewee import *
 from config import database
 
-db = MySQLDatabase(database.db, host=database.host, port=database.port, user=database.username, passwd=database.password)
+db = MySQLDatabase(database.db, host=database.host, port=database.port, user=database.username,
+                   passwd=database.password)
 db.connect()
 
 
 class BaseModel(Model):
-
     class Meta:
         database = db
 
@@ -44,6 +44,7 @@ class BiliDanmaku(BaseModel):
     user_level = IntegerField(null=True)
     vip = IntegerField(null=True)
 
+
 class BiliGift(BaseModel):
     action = CharField(null=True)
     coin_type = CharField(null=True)
@@ -64,6 +65,7 @@ class BiliGift(BaseModel):
     class Meta:
         table_name = 'bili_gift'
 
+
 class BiliGuard(BaseModel):
     end_time = DateTimeField(null=True)
     gift_id = IntegerField(null=True)
@@ -79,6 +81,7 @@ class BiliGuard(BaseModel):
 
     class Meta:
         table_name = 'bili_guard'
+
 
 class BiliSc(BaseModel):
     background_bottom_color = CharField(null=True)
@@ -107,3 +110,16 @@ class BiliSc(BaseModel):
         table_name = 'bili_sc'
 
 
+class BiliEnter(BaseModel):
+    create_time = DateTimeField()
+    guard_level = IntegerField(null=True)
+    is_lighted = IntegerField(null=True)
+    medal_level = IntegerField(null=True)
+    medal_name = CharField(null=True)
+    room_id = IntegerField(null=True)
+    timestamp = BigIntegerField(null=True)
+    uid = IntegerField(null=True)
+    uname = CharField(null=True)
+
+    class Meta:
+        table_name = 'bili_enter'

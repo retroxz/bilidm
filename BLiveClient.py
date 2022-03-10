@@ -15,6 +15,7 @@ bili_gift = BiliGift()
 bili_guard = BiliGuard()
 bili_sc = BiliSc()
 
+
 # 时间戳转字符串
 def timestamp_to_str(timestamp):
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
@@ -50,6 +51,9 @@ class MyBLiveClient(blivedm.BLiveClient):
     async def __on_welcome_guard(self,command):
         print(F"[舰长入场]{command}")
 
+    async def __on_enter_room(self, command):
+        print(command)
+
     _COMMAND_HANDLERS['WELCOME'] = __on_vip_enter  # 老爷入场
 
     _COMMAND_HANDLERS['ROOM_CHANGE'] = __on_room_change  # 可能是标题改
@@ -61,6 +65,8 @@ class MyBLiveClient(blivedm.BLiveClient):
     _COMMAND_HANDLERS['Live'] = __on_live  # 可能是直播间状态
 
     _COMMAND_HANDLERS['WELCOME_GUARD'] = __on_welcome_guard  # 可能是直播间状态
+
+    _COMMAND_HANDLERS['INTERACT_WORD'] = __on_enter_room
 
     async def _on_receive_popularity(self, popularity: int):
         print(f'当前人气值：{popularity}')
