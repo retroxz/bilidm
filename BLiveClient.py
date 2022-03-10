@@ -8,6 +8,7 @@ from model.Tables import BiliSc
 from model.Tables import BiliEnter
 from config import api
 from config import BLive
+from datetime import datetime
 import httpx
 import json
 
@@ -62,9 +63,11 @@ class MyBLiveClient(blivedm.BLiveClient):
         # 写入json
         logger.write_json_str(json.dumps(command))
         # 写入数据表
+        create_time = datetime.fromtimestamp(command['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
         bili_enter.create(uid=command['uid'], uname=command['uname'], guard_level=command['fans_medal']['guard_level'],
                           is_lighted=command['fans_medal']['is_lighted'], medal_level=command['fans_medal']['medal_level'],
-                          medal_name=command['fans_medal']['medal_name'], room_id=command['roomid'], timestamp=command['timestamp'])
+                          medal_name=command['fans_medal']['medal_name'], room_id=command['roomid'], timestamp=command['timestamp'],
+                          create_time=create_time)
 
     _COMMAND_HANDLERS['WELCOME'] = __on_vip_enter  # 老爷入场
 
